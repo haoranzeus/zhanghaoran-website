@@ -15,7 +15,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     
 
-class TestingConfig(Cofig):
+class TestingConfig(Config):
     TESTING = True
 
 
