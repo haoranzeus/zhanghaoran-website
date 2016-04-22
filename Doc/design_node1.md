@@ -225,7 +225,84 @@ Like :meth:`Flask.errorhandler` but for a blueprint.  This handler is used for a
 
 ### 编写模板 ###
 
-编写简单的index模板和错误处理的模板。由于各个页面中可能会有很多相同的部分，为了不重复编写代码，我们可以将共同的部分写入app/templates/base.html，然后其他的模板再从该模板进行衍生。
+编写简单的index模板和错误处理的模板。由于各个页面中可能会有很多相同的部分，为了不重复编写代码，我们可以将共同的部分写入app/templates/base.html，然后其他的模板再从该模板进行衍生。其代码如下：
+
+	{% extends "bootstrap/base.html" %}
+	                               
+	{% block title %}xxx的个人网站{% endblock %}
+	
+	
+	{% block navbar %}
+	<nav class="navbar navbar-inverse" role="navigation">
+	    <div class="container">
+	        <div class="navbar-header">
+	            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	                <span class="sr-only">Toggle navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	            </button>
+	            <a class="navbar-brand" href="{{ url_for('main.index') }}">Home</a>
+	        </div>
+	    </div>
+	</nav>
+	{% endblock %}
+	
+	{% block content %}
+	<div class="container">
+	    {% block page_content %}{% endblock %}
+	</div>
+	{% endblock %}
+
+在jinja2中，extends用于继承模板。因为需要用到bootstrap/base.html中的样式，所以使用extends对其进行继承。
+
+
+
+--|--
+块名|说明
+doc|整个HTML的文档
+html_attribs|\<html>标签的属性
+html|\<html>标签中的内容
+head|\<head>标签中的内容
+title|\<title>标签中的内容
+metas|一组\<meta>标签
+styles|层叠样式表定义
+body_attribs|\<body>标签定义
+body|\<body>标签中的内容
+navbar|用户定义的导航条
+content|用户定义的页面内容
+scripts|文档底包的JavaScript声明
+
+第一处nav标签的地方在《Flask Web编程》中使用的是div，但向HTML5转，我也尝试着使用新标签，让标签来表现语义，比如用nav来替换div，表示导航。
+
+bootstrap中提供了诸多样式，navbar-inverse表示反色的导航条。container是一个布局容器，是一个用于固定宽度并支持响应式布局的容器。
+
+title, navbar, content都是Flask-Bootstrap的基模板中定义的块。其定义的块如下所示：
+
+为了给导航栏添加响应式特性，要折叠的内容必须包裹在带有classes.collapse、.navbar-collapse的\<div>中。折叠起来的导航栏实际上是一个带有class.navbar-toggle以及两个data-元素的按钮。第一个是data-toggle，用于告诉JavaScript需要对按钮做什么，第二个是data-target，指示要切换到哪一个元素。三个带有class.icon-bar的<span>创建所谓的汉堡包按钮。这些会切换为.nav-collapse\<div>中的元素。为了实现以上这些功能，必须包含Bootstrap折叠(Collapse)插件。
+
+在Bootstrap中，data开头的属性是JQuary的API，可以仅仅通过data属性API就能使用所有的Bootstrap插件，无序写一行JavaScript代码。这是Bootstrap中的一等API，也应该是首选方式。
+
+其他页面都从这个base.html中继承。
 
 ## 启动脚本 ##
 
+启动脚本位于根目录下，名为manage.py，内容如下：
+
+	#!/usr/bin/env python          
+	import os                      
+	from app import create_app     
+	from flask.ext.script import Manager, Shell
+	
+	app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+	manager = Manager(app)         
+	
+	  
+	if __name__ == '__main__':
+	    manager.run() 
+
+在这里我们使用从环境变量中获取的配置名称生成程序实例app，然后对其进行适当的包裹。
+
+## 雏形 ##
+
+好了一个web的雏形出现了，运行./manage.py runserver -h 0.0.0.0 -p 8080，web服务器启动。
