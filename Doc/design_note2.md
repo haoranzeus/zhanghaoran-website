@@ -21,3 +21,22 @@
 这样图标的声明会插入head块的末尾。注意使用super()保留基模板中定义的块的原始内容。
 
 ## 数据库设计 ##
+
+中间间断了好长时间，今天继续。
+
+数据库先采用简单的，由于是个人网站，只有一个人写文章，也就无所谓作者了。不考虑什么评论之类的，那么就只需要一个名为entries表，三个表项：
+
+- id
+- title
+- text
+
+在app/models.py中创建数据库，内容如下：
+
+	from . import db
+	
+	class Role(db.Model):
+	    __tablename__ = "enteries"
+	    id = db.Column(db.Integer, primary_key=True)
+	    title = db.Column(db.String(64), unique=True, nullable=False)
+	    text = db.Column(db.Test, nullable=False)
+
