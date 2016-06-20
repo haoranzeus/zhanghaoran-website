@@ -6,5 +6,18 @@
 <div class="page-header">
     <h1>{{ entry.title }}</h1>
 </div>
-    <body>{{ entry.text }}</body>
+<textarea id="text-input" oninput="this.editor.update()">{{ entry.text }}</textarea>
+<div id="preview"> </div>
+<script src="{{ url_for('static', filename='markdown.js') }}"></script>
+<script>
+    function Editor(input, preview) {
+        this.update = function () {
+            preview.innerHTML = markdown.toHTML(input.value);
+        };
+        input.editor = this;
+        this.update();
+    }
+    var $ = function (id) { return document.getElementById(id); };
+    new Editor($("text-input"), $("preview"));
+</script>
 {% endblock %}
