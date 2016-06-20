@@ -99,3 +99,7 @@
 	</script>
 
 这段代码其实我是不太会改的，前面那个textarea标签如果去掉了，就没有id参数了，也就不会显示后面的渲染结构，但如果不去掉，前面又有一段莫名其妙的框框显示markdown的原始字符串。
+
+针对这个问题，想到了一个可能不是最佳解决方案，但目前我的知识只能想到这的方案，就是添加hidden属性将那个不想要的部分隐藏起来：
+
+	<textarea id="text-input" oninput="this.editor.update()" hidden>{{ entry.text }}</textarea>

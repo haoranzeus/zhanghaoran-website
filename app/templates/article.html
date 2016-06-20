@@ -4,9 +4,9 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>{{ entry.title }}</h1>
+    <h1>博客文章——{{ entry.title }}</h1>
 </div>
-<textarea id="text-input" oninput="this.editor.update()">{{ entry.text }}</textarea>
+<textarea id="text-input" oninput="this.editor.update()" hidden>{{ entry.text }}</textarea>
 <div id="preview"> </div>
 <script src="{{ url_for('static', filename='markdown.js') }}"></script>
 <script>
